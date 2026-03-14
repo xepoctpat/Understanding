@@ -36,6 +36,7 @@ export function loadGraph(
         `Invalid knowledge graph: ${result.errors!.join("; ")}`,
       );
     }
+    return result.data as KnowledgeGraph;
   }
 
   return data as KnowledgeGraph;

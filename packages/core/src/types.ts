@@ -1,4 +1,4 @@
-// Edge types (17 total in 5 categories: Structural, Behavioral, Data flow, Dependencies, Semantic)
+// Edge types (18 total in 5 categories: Structural, Behavioral, Data flow, Dependencies, Semantic)
 export type EdgeType =
   | "imports" | "exports" | "contains" | "inherits" | "implements"  // Structural
   | "calls" | "subscribes" | "publishes" | "middleware"              // Behavioral
