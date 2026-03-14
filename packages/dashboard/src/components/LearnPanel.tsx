@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { useDashboardStore } from "../store";
 
@@ -12,9 +13,10 @@ export default function LearnPanel() {
   const prevTourStep = useDashboardStore((s) => s.prevTourStep);
   const selectNode = useDashboardStore((s) => s.selectNode);
 
-  const tourSteps = graph?.tour
-    ? [...graph.tour].sort((a, b) => a.order - b.order)
-    : [];
+  const tourSteps = useMemo(
+    () => graph?.tour ? [...graph.tour].sort((a, b) => a.order - b.order) : [],
+    [graph?.tour]
+  );
   const hasTour = tourSteps.length > 0;
 
   // State 1: No tour available

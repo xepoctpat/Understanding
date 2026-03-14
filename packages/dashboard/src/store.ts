@@ -2,7 +2,10 @@ import Anthropic from "@anthropic-ai/sdk";
 import { create } from "zustand";
 import { SearchEngine } from "@understand-anything/core/search";
 import type { SearchResult } from "@understand-anything/core/search";
-import type { KnowledgeGraph } from "@understand-anything/core/types";
+import type {
+  KnowledgeGraph,
+  TourStep,
+} from "@understand-anything/core/types";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -112,6 +115,10 @@ function buildSystemPrompt(
   return parts.join("\n");
 }
 
+function getSortedTour(graph: KnowledgeGraph): TourStep[] {
+  return [...graph.tour].sort((a, b) => a.order - b.order);
+}
+
 export const useDashboardStore = create<DashboardStore>()((set, get) => ({
   graph: null,
   selectedNodeId: null,
@@ -212,7 +219,7 @@ export const useDashboardStore = create<DashboardStore>()((set, get) => ({
   startTour: () => {
     const { graph } = get();
     if (!graph || graph.tour.length === 0) return;
-    const sorted = [...graph.tour].sort((a, b) => a.order - b.order);
+    const sorted = getSortedTour(graph);
     set({
       tourActive: true,
       currentTourStep: 0,
@@ -231,7 +238,7 @@ export const useDashboardStore = create<DashboardStore>()((set, get) => ({
   setTourStep: (step) => {
     const { graph } = get();
     if (!graph || graph.tour.length === 0) return;
-    const sorted = [...graph.tour].sort((a, b) => a.order - b.order);
+    const sorted = getSortedTour(graph);
     if (step < 0 || step >= sorted.length) return;
     set({
       currentTourStep: step,
@@ -242,7 +249,7 @@ export const useDashboardStore = create<DashboardStore>()((set, get) => ({
   nextTourStep: () => {
     const { graph, currentTourStep } = get();
     if (!graph || graph.tour.length === 0) return;
-    const sorted = [...graph.tour].sort((a, b) => a.order - b.order);
+    const sorted = getSortedTour(graph);
     if (currentTourStep < sorted.length - 1) {
       const next = currentTourStep + 1;
       set({
@@ -256,7 +263,7 @@ export const useDashboardStore = create<DashboardStore>()((set, get) => ({
     const { graph, currentTourStep } = get();
     if (!graph || graph.tour.length === 0) return;
     if (currentTourStep > 0) {
-      const sorted = [...graph.tour].sort((a, b) => a.order - b.order);
+      const sorted = getSortedTour(graph);
       const prev = currentTourStep - 1;
       set({
         currentTourStep: prev,

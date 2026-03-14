@@ -13,6 +13,8 @@ function App() {
   const graph = useDashboardStore((s) => s.graph);
   const setGraph = useDashboardStore((s) => s.setGraph);
   const tourActive = useDashboardStore((s) => s.tourActive);
+  const startTour = useDashboardStore((s) => s.startTour);
+  const stopTour = useDashboardStore((s) => s.stopTour);
 
   useEffect(() => {
     fetch("/knowledge-graph.json")
@@ -75,7 +77,7 @@ function App() {
               <div className="flex bg-gray-800 rounded-t-lg border-b border-gray-700 shrink-0">
                 <button
                   onClick={() => {
-                    if (tourActive) useDashboardStore.getState().stopTour();
+                    if (tourActive) stopTour();
                   }}
                   className={`flex-1 text-xs font-medium py-1.5 px-3 transition-colors ${
                     !tourActive
@@ -87,7 +89,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => {
-                    if (!tourActive) useDashboardStore.getState().startTour();
+                    if (!tourActive) startTour();
                   }}
                   className={`flex-1 text-xs font-medium py-1.5 px-3 transition-colors ${
                     tourActive
