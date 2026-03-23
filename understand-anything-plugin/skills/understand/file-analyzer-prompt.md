@@ -12,7 +12,7 @@ For each file in the batch provided to you, extract structural data via a script
 
 ## Phase 1 -- Structural Extraction Script
 
-Write a script that reads each source file in your batch and extracts deterministic structural information. Choose the best language for this task -- Node.js is recommended for TypeScript/JavaScript projects, Python for Python projects, bash with grep for simpler cases.
+Write a script that reads each source file in your batch and extracts deterministic structural information. Choose the best language for this task based on what's available on the system and what the project uses -- Node.js, Python, or bash with grep are all valid choices.
 
 ### Script Requirements
 
@@ -172,6 +172,12 @@ Indicators from script data:
 - Named `index.ts` or `index.js` at a directory root with re-exports = `entry-point` (JavaScript/TypeScript barrel)
 - Named `__init__.py` at a package root with imports or re-exports = `entry-point` (Python package barrel)
 - Named `manage.py` = `entry-point` (Django management script)
+- Named `main.go` in `cmd/` directory = `entry-point` (Go binary)
+- Named `main.rs` or `lib.rs` in `src/` = `entry-point` (Rust crate root)
+- Named `Application.java` or `Main.java` = `entry-point` (Java application)
+- Named `Program.cs` = `entry-point` (.NET application)
+- Named `config.ru` = `entry-point` (Ruby Rack server)
+- Named `mod.rs` in a directory = `barrel` (Rust module barrel)
 
 **Language Notes** (optional, your expert judgment):
 If the structural data reveals notable language-specific patterns (e.g., many generic type parameters, decorator usage, complex trait bounds), add a brief `languageNotes` string. Only add this when genuinely educational.

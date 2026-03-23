@@ -84,8 +84,10 @@ Read config files (if they exist) and extract framework information:
 - `requirements.txt` -- if present, confirms Python project; read line by line and match package names (strip version specifiers) against known Python frameworks: `django`, `djangorestframework`, `fastapi`, `flask`, `sqlalchemy`, `alembic`, `celery`, `pydantic`, `uvicorn`, `gunicorn`, `aiohttp`, `tornado`, `starlette`, `pytest`, `hypothesis`, `channels`
 - `pyproject.toml` -- if present, confirms Python project; parse the `[project].dependencies` or `[tool.poetry.dependencies]` section and apply the same Python framework keyword matching as above. Also check for `[tool.pytest.ini_options]` (confirms pytest) and `[tool.django]` (confirms Django).
 - `setup.py` / `setup.cfg` / `Pipfile` -- if present, confirms Python project; read and apply Python framework keyword matching
-- `Gemfile` -- if present, confirms Ruby project
-- `pom.xml` / `build.gradle` -- if present, confirms Java project
+- `Gemfile` -- if present, confirms Ruby project; read and match gem names against known Ruby frameworks: `rails`, `railties`, `sinatra`, `grape`, `rspec`, `sidekiq`, `activerecord`, `actionpack`, `devise`, `pundit`
+- `go.mod` dependencies -- if present, read the `require` block and match module paths against known Go frameworks: `github.com/gin-gonic/gin`, `github.com/labstack/echo`, `github.com/gofiber/fiber`, `github.com/go-chi/chi`, `gorm.io/gorm`
+- `Cargo.toml` dependencies -- if present, read `[dependencies]` and match crate names against known Rust frameworks: `actix-web`, `axum`, `rocket`, `diesel`, `tokio`, `serde`, `warp`
+- `pom.xml` / `build.gradle` / `build.gradle.kts` -- if present, confirms Java/Kotlin project; match dependency names against known JVM frameworks: `spring-boot`, `spring-web`, `spring-data`, `quarkus`, `micronaut`, `hibernate`, `jakarta`, `junit`, `ktor`
 
 **Step 6 -- Complexity Estimation**
 

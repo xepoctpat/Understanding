@@ -87,13 +87,31 @@ Classify each directory name against known architectural patterns:
 | `templatetags` | `utility` |
 | `signals` | `service` |
 | `serializers` | `api` |
+| `cmd` | `entry` |
+| `internal` | `service` |
+| `pkg` | `utility` |
+| `src/main/java` | `service` |
+| `src/test/java` | `test` |
+| `dto`, `request`, `response` | `types` |
+| `entity` | `data` |
+| `controller` | `api` |
+| `routers` | `api` |
+| `composables` | `service` |
+| `blueprints` | `api` |
+| `mailers`, `jobs`, `channels` | `service` |
+| `bin` | `entry` |
 
 Also check file-level patterns:
-- Files matching `*.test.*` or `*.spec.*` or `test_*.py` -> `test`
+- Files matching `*.test.*` or `*.spec.*` or `test_*.py` or `*_test.go` or `*Test.java` or `*_spec.rb` or `*Test.php` or `*Tests.cs` -> `test`
 - Files matching `*.d.ts` -> `types` (TypeScript declaration files only)
 - Files named `index.ts`, `index.js`, or `__init__.py` at a package/directory root -> `entry`
 - Files named `manage.py` at the project root -> `entry` (Django management entry point)
 - Files named `wsgi.py` or `asgi.py` -> `config` (Python WSGI/ASGI server config)
+- Files named `main.go` at `cmd/*/` -> `entry` (Go binary entry points)
+- Files named `main.rs` or `lib.rs` at `src/` -> `entry` (Rust crate roots)
+- Files named `Application.java` or `Program.cs` -> `entry` (JVM / .NET entry points)
+- Files named `config.ru` -> `entry` (Ruby Rack entry point)
+- Files named `Cargo.toml`, `go.mod`, `Gemfile`, `pom.xml`, `build.gradle`, `composer.json` -> `config` (language-level project config)
 
 **F. Dependency Direction**
 
