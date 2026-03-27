@@ -20,11 +20,14 @@ Write a script that reads each source file in your batch and extracts determinis
    ```json
    {
      "projectRoot": "/path/to/project",
-     "allProjectFiles": ["src/index.ts", "src/utils.ts", "..."],
      "batchFiles": [
        {"path": "src/index.ts", "language": "typescript", "sizeLines": 150},
        {"path": "src/utils.ts", "language": "typescript", "sizeLines": 80}
-     ]
+     ],
+     "batchImportData": {
+       "src/index.ts": ["src/utils.ts", "src/config.ts"],
+       "src/utils.ts": []
+     }
    }
    ```
 2. **Write** results JSON to the path given as the second argument.
@@ -45,10 +48,9 @@ For each file in `batchFiles`, read the file content and extract:
 - Detection approach: match `class <name>`, `interface <name>`, `type <name> =`, `struct <name>`, `trait <name>`, `impl <name>` as appropriate
 
 **Imports:**
-- Source module path (exactly as written in the import statement)
-- Imported specifiers (named imports, default import, namespace import)
-- Line number
-- For relative imports (starting with `./` or `../`), compute the resolved path relative to project root. Cross-reference against `allProjectFiles` to confirm the resolved path exists. Mark unresolvable imports.
+- Do NOT extract imports in the script. Import resolution has already been performed by the project scanner.
+- The pre-resolved imports for each file are provided in `batchImportData` in the input JSON.
+- Do not include an `imports` field in the script output — import edges will be created in Phase 2 using `batchImportData` directly.
 
 **Exports:**
 - Exported names and their line numbers
@@ -82,10 +84,6 @@ The script must write this exact JSON structure to the output file:
       "classes": [
         {"name": "App", "startLine": 50, "endLine": 140, "methods": ["init", "run"], "properties": ["config", "logger"]}
       ],
-      "imports": [
-        {"source": "./utils", "resolvedPath": "src/utils.ts", "specifiers": ["formatDate", "sanitize"], "line": 1, "isExternal": false},
-        {"source": "express", "resolvedPath": null, "specifiers": ["default"], "line": 2, "isExternal": true}
-      ],
       "exports": [
         {"name": "App", "line": 50, "isDefault": true},
         {"name": "createApp", "line": 145, "isDefault": false}
@@ -114,8 +112,8 @@ Before writing the script, create its input JSON file. **IMPORTANT:** Use the ba
 cat > $PROJECT_ROOT/.understand-anything/tmp/ua-file-analyzer-input-<batchIndex>.json << 'ENDJSON'
 {
   "projectRoot": "<project-root>",
-  "allProjectFiles": [<full file list from scan>],
-  "batchFiles": [<this batch's files>]
+  "batchFiles": [<this batch's files>],
+  "batchImportData": <batchImportData JSON object — provided in your dispatch prompt>
 }
 ENDJSON
 ```
@@ -202,7 +200,7 @@ Using the script's import, export, and structural data, create edges:
 | Edge Type | When to Create | Weight | Direction |
 |---|---|---|---|
 | `contains` | File contains a function or class node you created | `1.0` | `forward` |
-| `imports` | File imports from another project file (use `resolvedPath` from script, skip external imports where `isExternal: true`) | `0.7` | `forward` |
+| `imports` | File imports from another project file (use `batchImportData[filePath]` from input JSON — external imports already filtered out) | `0.7` | `forward` |
 | `calls` | A function in this file calls a function in another file (infer from imports + function names when confident) | `0.8` | `forward` |
 | `inherits` | A class extends another class in the project | `0.9` | `forward` |
 | `implements` | A class implements an interface in the project | `0.9` | `forward` |
@@ -210,7 +208,7 @@ Using the script's import, export, and structural data, create edges:
 | `depends_on` | File has runtime dependency on another project file (broader than imports -- includes dynamic requires, lazy loads) | `0.6` | `forward` |
 | `tested_by` | Source file is tested by a test file (infer from test file imports and naming conventions) | `0.5` | `forward` |
 
-**Import edge creation rule:** For each import in the script output where `isExternal` is `false` and `resolvedPath` is non-null, create an `imports` edge from the current file node to `file:<resolvedPath>`. Do NOT create edges for external package imports.
+**Import edge creation rule:** For each resolved path in `batchImportData[filePath]` (provided in the input JSON), create an `imports` edge from the current file node to `file:<resolvedPath>`. The `batchImportData` values contain only resolved project-internal paths — external packages have already been filtered out. Do NOT attempt to re-resolve imports from source.
 
 Do NOT use edge types not listed in this table.
 
@@ -327,10 +325,10 @@ Use these hints to improve tag and edge accuracy for common patterns. Your train
 ## Critical Constraints
 
 - NEVER invent file paths. Every `filePath` and every file reference in node IDs must correspond to a real file from the script's output or the project file list provided to you.
-- NEVER create edges to nodes that do not exist. If an import target is external (`isExternal: true` in script output), do NOT create an edge for it.
+- NEVER create edges to nodes that do not exist. Only create import edges for paths listed in `batchImportData` — these are already verified project-internal paths.
 - ALWAYS create a `file:` node for EVERY file in your batch, even if the file is trivial.
 - Only create `function:` and `class:` nodes for significant code elements (see significance filter above).
-- For import edges, use the script's `resolvedPath` field directly. Do NOT attempt to resolve import paths yourself -- the script already did this deterministically.
+- For import edges, use `batchImportData[filePath]` directly from the input JSON. Do NOT attempt to resolve import paths yourself -- the project scanner already did this deterministically.
 - NEVER produce duplicate node IDs within your batch.
 - NEVER create self-referencing edges (where source equals target).
 - Trust the script's structural extraction. Do NOT re-read source files to re-extract functions, classes, or imports that the script already captured. Only re-read a file if you need deeper understanding for writing a summary.
