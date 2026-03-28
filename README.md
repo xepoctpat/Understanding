@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a> | <a href="README.ja-JP.md">日本語</a>
+  <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a> | <a href="README.ja-JP.md">日本語</a> | <a href="README.tr-TR.md">Türkçe</a>
 </p>
 
 <p align="center">
@@ -122,11 +122,9 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Lum1104/Und
 
 ### OpenCode
 
-Add to your `opencode.json`:
-```json
-{
-  "plugin": ["understand-anything@git+https://github.com/Lum1104/Understand-Anything.git"]
-}
+Tell OpenCode:
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/Lum1104/Understand-Anything/refs/heads/main/.opencode/INSTALL.md
 ```
 
 ### OpenClaw
@@ -147,16 +145,32 @@ Tell Antigravity:
 Fetch and follow instructions from https://raw.githubusercontent.com/Lum1104/Understand-Anything/refs/heads/main/.antigravity/INSTALL.md
 ```
 
+### Gemini CLI
+
+Tell Gemini CLI:
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/Lum1104/Understand-Anything/refs/heads/main/.gemini/INSTALL.md
+```
+
+### Pi Agent
+
+Tell Pi Agent:
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/Lum1104/Understand-Anything/refs/heads/main/.pi/INSTALL.md
+```
+
 ### Platform Compatibility
 
 | Platform | Status | Install Method |
 |----------|--------|----------------|
 | Claude Code | ✅ Native | Plugin marketplace |
 | Codex | ✅ Supported | AI-driven install |
-| OpenCode | ✅ Supported | Plugin config |
+| OpenCode | ✅ Supported | AI-driven install |
 | OpenClaw | ✅ Supported | AI-driven install |
 | Cursor | ✅ Supported | Auto-discovery |
 | Antigravity | ✅ Supported | AI-driven install |
+| Gemini CLI | ✅ Supported | AI-driven install |
+| Pi Agent | ✅ Supported | AI-driven install |
 
 ---
 
@@ -223,9 +237,9 @@ The `/understand` command orchestrates 5 specialized agents:
 | `file-analyzer` | Extract functions, classes, imports; produce graph nodes and edges |
 | `architecture-analyzer` | Identify architectural layers |
 | `tour-builder` | Generate guided learning tours |
-| `graph-reviewer` | Validate graph completeness and referential integrity |
+| `graph-reviewer` | Validate graph completeness and referential integrity (runs inline by default; use `--review` for full LLM review) |
 
-File analyzers run in parallel (up to 3 concurrent). Supports incremental updates — only re-analyzes files that changed since the last run.
+File analyzers run in parallel (up to 5 concurrent, 20-30 files per batch). Supports incremental updates — only re-analyzes files that changed since the last run.
 
 ### Project Structure
 

@@ -41,7 +41,7 @@ describe("persistence", () => {
     edges: [
       {
         source: "node-1",
-        target: "node-2",
+        target: "node-1",
         type: "imports",
         direction: "forward",
         weight: 0.8,

@@ -36,7 +36,7 @@ export function loadGraph(
     const result = validateGraph(data);
     if (!result.success) {
       throw new Error(
-        `Invalid knowledge graph: ${result.errors!.join("; ")}`,
+        `Invalid knowledge graph: ${result.fatal ?? "unknown error"}`,
       );
     }
     return result.data as KnowledgeGraph;
