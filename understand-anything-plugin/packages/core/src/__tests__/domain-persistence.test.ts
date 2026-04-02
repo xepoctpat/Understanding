@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdirSync, rmSync, existsSync, readFileSync } from "node:fs";
+import { mkdirSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { saveDomainGraph, loadDomainGraph } from "../persistence/index.js";
@@ -20,7 +20,7 @@ const domainGraph: KnowledgeGraph = {
   nodes: [
     {
       id: "domain:orders",
-      type: "domain" as any,
+      type: "domain",
       name: "Orders",
       summary: "Order management",
       tags: [],
