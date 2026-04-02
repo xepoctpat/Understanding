@@ -72,7 +72,11 @@ export function normalizeNodeId(
   const { prefix, path } = stripToValidPrefix(trimmed);
 
   if (prefix) {
-    // For step nodes with filePath, reconstruct as step:filePath:stepSlug
+    // For step nodes with filePath, reconstruct as step:filePath:stepSlug.
+    // This intentionally drops the flow slug (e.g. "create-order" in
+    // "step:create-order:validate") — the normalized form anchors to
+    // file paths instead of flow parentage, so the ID is stable across
+    // renames of the parent flow.
     if (node.type === "step" && node.filePath) {
       // Use the last colon-separated segment of the path as the step slug
       const lastColon = path.lastIndexOf(":");
@@ -91,6 +95,11 @@ export function normalizeNodeId(
       node.name
     ) {
       return `${expectedPrefix}:${node.filePath}:${node.name}`;
+    }
+    // For step nodes with filePath, reconstruct as step:filePath:slug
+    if (node.type === "step" && node.filePath) {
+      const slug = path.toLowerCase().replace(/\s+/g, "-");
+      return `${expectedPrefix}:${node.filePath}:${slug}`;
     }
     return `${expectedPrefix}:${path}`;
   }
