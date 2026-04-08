@@ -1,7 +1,9 @@
 <h1 align="center">Understand Anything</h1>
 
 <p align="center">
-  <strong>Turn any codebase into an interactive knowledge graph you can explore, search, and ask questions about.</strong>
+  <strong>Turn any codebase, Dockerfile, or docs into an interactive knowledge graph you can explore, search, and ask questions about.</strong>
+  <br />
+  <em>Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.</em>
 </p>
 
 <p align="center">

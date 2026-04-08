@@ -1,6 +1,8 @@
 <h1 align="center">Understand Anything</h1>
 <p align="center">
-  <strong>将任意代码库转化为可探索、可搜索、可对话的交互式知识图谱</strong>
+  <strong>将任意代码库、Dockerfile 或文档转化为可探索、可搜索、可对话的交互式知识图谱</strong>
+  <br />
+  <em>支持 Claude Code、Codex、Cursor、Copilot、Gemini CLI 等多平台。</em>
 </p>
 
 <p align="center">

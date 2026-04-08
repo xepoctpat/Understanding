@@ -1,7 +1,9 @@
 <h1 align="center">Understand Anything</h1>
 
 <p align="center">
-  <strong>あらゆるコードベースを、探索・検索・質問ができるインタラクティブなナレッジグラフに変換します。</strong>
+  <strong>あらゆるコードベース、Dockerfile、ドキュメントを、探索・検索・質問ができるインタラクティブなナレッジグラフに変換します。</strong>
+  <br />
+  <em>Claude Code、Codex、Cursor、Copilot、Gemini CLI など、マルチプラットフォーム対応。</em>
 </p>
 
 <p align="center">

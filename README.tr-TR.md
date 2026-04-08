@@ -1,7 +1,9 @@
 <h1 align="center">Understand Anything</h1>
 
 <p align="center">
-  <strong>Herhangi bir kod tabanını keşfedebileceğin, arayabileceğin ve hakkında sorular sorabileceğin interaktif bir bilgi grafiğine dönüştür.</strong>
+  <strong>Herhangi bir kod tabanını, Dockerfile'ı veya dokümantasyonu keşfedebileceğin, arayabileceğin ve hakkında sorular sorabileceğin interaktif bir bilgi grafiğine dönüştür.</strong>
+  <br />
+  <em>Claude Code, Codex, Cursor, Copilot, Gemini CLI ve daha fazlasıyla çalışır.</em>
 </p>
 
 <p align="center">
