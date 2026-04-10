@@ -39,7 +39,7 @@ Discover all tracked files. In order of preference:
 
 Remove ALL files matching these patterns:
 - **Dependency directories:** paths containing `node_modules/`, `.git/`, `vendor/`, `venv/`, `.venv/`, `__pycache__/`
-- **Build output:** paths with a directory segment matching `dist/`, `build/`, `out/`, `coverage/`, `.next/`, `.cache/`, `.turbo/`, `target/` (Rust) — match full directory segments only, not substrings (e.g., `buildSrc/` should NOT be excluded)
+- **Build output:** paths with a directory segment matching `dist/`, `build/`, `out/`, `coverage/`, `.next/`, `.cache/`, `.turbo/`, `target/` (Rust), `bin/` (.NET), `obj/` (.NET) — match full directory segments only, not substrings (e.g., `buildSrc/` should NOT be excluded)
 - **Lock files:** `*.lock`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
 - **Binary/asset files:** `.png`, `.jpg`, `.jpeg`, `.gif`, `.svg`, `.ico`, `.woff`, `.woff2`, `.ttf`, `.eot`, `.mp3`, `.mp4`, `.pdf`, `.zip`, `.tar`, `.gz`
 - **Generated files:** `*.min.js`, `*.min.css`, `*.map`, `*.generated.*` (note: do NOT exclude `*.d.ts` — many projects have hand-written declaration files)
@@ -57,6 +57,19 @@ Remove ALL files matching these patterns:
 - Kubernetes: `*.k8s.yaml`, `*.k8s.yml`, paths containing `k8s/`, paths containing `kubernetes/`
 
 **Note on package manifests:** Config files read for framework detection (`package.json`, `tsconfig.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.) should also appear in the file list with `fileCategory: "config"`.
+
+**Step 2.5 -- User-Configured Filtering (.understandignore)**
+
+After applying the hardcoded exclusion filters above, apply user-configured patterns from `.understandignore`:
+
+1. Check if `$PROJECT_ROOT/.understand-anything/.understandignore` exists. If so, read it.
+2. Check if `$PROJECT_ROOT/.understandignore` exists. If so, read it.
+3. Parse both files using `.gitignore` syntax (glob patterns, `#` comments, blank lines ignored, `!` prefix for negation, trailing `/` for directories, `**/` for recursive matching).
+4. Filter the remaining file list through these patterns. Files matching any pattern are excluded.
+5. `!` negation patterns override the hardcoded exclusions from Step 2 (e.g., `!dist/` force-includes files from dist/).
+6. Track the count of files removed by this step as `filteredByIgnore`.
+
+This filtering must be deterministic (not LLM-based). Use a Node.js script with the `ignore` npm package from `@understand-anything/core`, or apply the patterns manually if the file list is small.
 
 **Step 3 -- Language Detection**
 
@@ -217,6 +230,7 @@ The script must write this exact JSON structure to the output file:
     {"path": "package.json", "language": "json", "sizeLines": 35, "fileCategory": "config"}
   ],
   "totalFiles": 42,
+  "filteredByIgnore": 0,
   "estimatedComplexity": "moderate",
   "importMap": {
     "src/index.ts": ["src/utils.ts", "src/config.ts"],
@@ -237,6 +251,7 @@ The script must write this exact JSON structure to the output file:
 - `files` (object[]) -- every discovered file, sorted by `path` alphabetically
 - `files[].fileCategory` (string) -- one of: `code`, `config`, `docs`, `infra`, `data`, `script`, `markup`
 - `totalFiles` (integer) -- must equal `files.length`
+- `filteredByIgnore` (integer) -- count of files removed by `.understandignore` patterns in Step 2.5; 0 if no `.understandignore` file exists
 - `estimatedComplexity` (string) -- one of `small`, `moderate`, `large`, `very-large`
 - `importMap` (object) -- map from every file path to its list of resolved project-internal import paths; empty array for non-code files and files with no resolved imports; external packages excluded
 
@@ -281,6 +296,7 @@ Then assemble the final output JSON:
     {"path": "Dockerfile", "language": "dockerfile", "sizeLines": 22, "fileCategory": "infra"}
   ],
   "totalFiles": 42,
+  "filteredByIgnore": 0,
   "estimatedComplexity": "moderate",
   "importMap": {
     "src/index.ts": ["src/utils.ts"]
@@ -295,6 +311,7 @@ Then assemble the final output JSON:
 - `frameworks` (string[]): directly from script output
 - `files` (object[]): directly from script output, including `fileCategory` per file
 - `totalFiles` (integer): directly from script output
+- `filteredByIgnore` (integer): directly from script output
 - `estimatedComplexity` (string): directly from script output
 - `importMap` (object): directly from script output
 
