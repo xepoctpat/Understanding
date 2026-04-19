@@ -1223,7 +1223,7 @@ Verify in browser:
 Add a "Homepage" link near the top of the README, after the badges section. Add a single line:
 
 ```markdown
-**[Homepage](https://lum1104.github.io/Understand-Anything)** | **[GitHub](https://github.com/Lum1104/Understand-Anything)**
+**[Homepage](https://understand-anything.com)** | **[GitHub](https://github.com/Lum1104/Understand-Anything)**
 ```
 
 **Step 4: Final commit**

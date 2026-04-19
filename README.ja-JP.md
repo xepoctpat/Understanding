@@ -29,8 +29,8 @@
   <a href="#copilot-cli"><img src="https://img.shields.io/badge/Copilot_CLI-24292e" alt="Copilot CLI" /></a>
   <a href="#gemini-cli"><img src="https://img.shields.io/badge/Gemini_CLI-4285F4" alt="Gemini CLI" /></a>
   <a href="#opencode"><img src="https://img.shields.io/badge/OpenCode-38bdf8" alt="OpenCode" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything"><img src="https://img.shields.io/badge/Homepage-d4a574" alt="ホームページ" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything/demo/"><img src="https://img.shields.io/badge/Live_Demo-00c853" alt="ライブデモ" /></a>
+  <a href="https://understand-anything.com"><img src="https://img.shields.io/badge/Homepage-d4a574" alt="ホームページ" /></a>
+  <a href="https://understand-anything.com/demo/"><img src="https://img.shields.io/badge/Live_Demo-00c853" alt="ライブデモ" /></a>
 </p>
 
 <p align="center">
@@ -53,7 +53,7 @@ Understand Anything は [Claude Code](https://docs.anthropic.com/en/docs/claude-
 ## ✨ 機能
 
 > [!NOTE]
-> **すぐに試したいですか？** [ホームページ](https://lum1104.github.io/Understand-Anything/)で[ライブデモ](https://lum1104.github.io/Understand-Anything/demo/)をお試しください — パン、ズーム、検索、探索ができる完全インタラクティブなダッシュボードです。
+> **すぐに試したいですか？** [ホームページ](https://understand-anything.com/)で[ライブデモ](https://understand-anything.com/demo/)をお試しください — パン、ズーム、検索、探索ができる完全インタラクティブなダッシュボードです。
 
 ### コード構造グラフを探索
 

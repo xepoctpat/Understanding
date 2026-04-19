@@ -28,8 +28,8 @@
   <a href="#copilot-cli"><img src="https://img.shields.io/badge/Copilot_CLI-24292e" alt="Copilot CLI" /></a>
   <a href="#gemini-cli"><img src="https://img.shields.io/badge/Gemini_CLI-4285F4" alt="Gemini CLI" /></a>
   <a href="#opencode"><img src="https://img.shields.io/badge/OpenCode-38bdf8" alt="OpenCode" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything"><img src="https://img.shields.io/badge/Página_Principal-d4a574" alt="Homepage" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything/demo/"><img src="https://img.shields.io/badge/Demo_en_Vivo-00c853" alt="Live Demo" /></a>
+  <a href="https://understand-anything.com"><img src="https://img.shields.io/badge/Página_Principal-d4a574" alt="Homepage" /></a>
+  <a href="https://understand-anything.com/demo/"><img src="https://img.shields.io/badge/Demo_en_Vivo-00c853" alt="Live Demo" /></a>
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@ Understand Anything es un plugin de [Claude Code](https://docs.anthropic.com/en/
 ## ✨ Características
 
 > [!NOTE]
-> **¿Quieres probarlo directamente?** Prueba la [demo en vivo](https://lum1104.github.io/Understand-Anything/demo/) en nuestra [página principal](https://lum1104.github.io/Understand-Anything/) — un panel interactivo donde puedes navegar, hacer zoom, buscar y explorar directamente en tu navegador.
+> **¿Quieres probarlo directamente?** Prueba la [demo en vivo](https://understand-anything.com/demo/) en nuestra [página principal](https://understand-anything.com/) — un panel interactivo donde puedes navegar, hacer zoom, buscar y explorar directamente en tu navegador.
 
 ### Explora el grafo estructural
 

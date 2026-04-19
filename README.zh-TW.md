@@ -28,8 +28,8 @@
   <a href="#copilot-cli"><img src="https://img.shields.io/badge/Copilot_CLI-24292e" alt="Copilot CLI" /></a>
   <a href="#gemini-cli"><img src="https://img.shields.io/badge/Gemini_CLI-4285F4" alt="Gemini CLI" /></a>
   <a href="#opencode"><img src="https://img.shields.io/badge/OpenCode-38bdf8" alt="OpenCode" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything"><img src="https://img.shields.io/badge/專案首頁-d4a574" alt="Homepage" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything/demo/"><img src="https://img.shields.io/badge/線上展示-00c853" alt="Live Demo" /></a>
+  <a href="https://understand-anything.com"><img src="https://img.shields.io/badge/專案首頁-d4a574" alt="Homepage" /></a>
+  <a href="https://understand-anything.com/demo/"><img src="https://img.shields.io/badge/線上展示-00c853" alt="Live Demo" /></a>
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@ Understand Anything 是一個基於 [Claude Code](https://docs.anthropic.com/en/
 ## ✨ 核心功能
 
 > [!NOTE]
-> **想直接體驗？** 在我們的[首頁](https://lum1104.github.io/Understand-Anything/)試試[線上演示](https://lum1104.github.io/Understand-Anything/demo/) — 一個可以平移、縮放、搜尋和探索的全互動式儀表盤。
+> **想直接體驗？** 在我們的[首頁](https://understand-anything.com/)試試[線上演示](https://understand-anything.com/demo/) — 一個可以平移、縮放、搜尋和探索的全互動式儀表盤。
 
 ### 探索程式碼結構圖
 

@@ -28,8 +28,8 @@
   <a href="#copilot-cli"><img src="https://img.shields.io/badge/Copilot_CLI-24292e" alt="Copilot CLI" /></a>
   <a href="#gemini-cli"><img src="https://img.shields.io/badge/Gemini_CLI-4285F4" alt="Gemini CLI" /></a>
   <a href="#opencode"><img src="https://img.shields.io/badge/OpenCode-38bdf8" alt="OpenCode" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything"><img src="https://img.shields.io/badge/홈페이지-d4a574" alt="Homepage" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything/demo/"><img src="https://img.shields.io/badge/라이브_데모-00c853" alt="Live Demo" /></a>
+  <a href="https://understand-anything.com"><img src="https://img.shields.io/badge/홈페이지-d4a574" alt="Homepage" /></a>
+  <a href="https://understand-anything.com/demo/"><img src="https://img.shields.io/badge/라이브_데모-00c853" alt="Live Demo" /></a>
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@ Understand Anything은 [Claude Code](https://docs.anthropic.com/en/docs/claude-c
 ## ✨ 주요 기능
 
 > [!NOTE]
-> **바로 체험해보세요!** [홈페이지](https://lum1104.github.io/Understand-Anything/)에서 [라이브 데모](https://lum1104.github.io/Understand-Anything/demo/)를 사용해보세요 — 팬, 줌, 검색, 탐색이 가능한 완전한 인터랙티브 대시보드입니다.
+> **바로 체험해보세요!** [홈페이지](https://understand-anything.com/)에서 [라이브 데모](https://understand-anything.com/demo/)를 사용해보세요 — 팬, 줌, 검색, 탐색이 가능한 완전한 인터랙티브 대시보드입니다.
 
 ### 구조 그래프 탐색
 

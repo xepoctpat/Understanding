@@ -16,7 +16,7 @@
 
 - Source: `homepage/` directory on `main` branch
 - Build output: deployed to `gh-pages` branch via GitHub Actions
-- URL: `lum1104.github.io/Understand-Anything`
+- URL: `understand-anything.com`
 
 ## Page Structure (scroll order)
 

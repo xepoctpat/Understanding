@@ -29,8 +29,8 @@
   <a href="#copilot-cli"><img src="https://img.shields.io/badge/Copilot_CLI-24292e" alt="Copilot CLI" /></a>
   <a href="#gemini-cli"><img src="https://img.shields.io/badge/Gemini_CLI-4285F4" alt="Gemini CLI" /></a>
   <a href="#opencode"><img src="https://img.shields.io/badge/OpenCode-38bdf8" alt="OpenCode" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything"><img src="https://img.shields.io/badge/Ana_Sayfa-d4a574" alt="Ana Sayfa" /></a>
-  <a href="https://lum1104.github.io/Understand-Anything/demo/"><img src="https://img.shields.io/badge/Canlı_Demo-00c853" alt="Canlı Demo" /></a>
+  <a href="https://understand-anything.com"><img src="https://img.shields.io/badge/Ana_Sayfa-d4a574" alt="Ana Sayfa" /></a>
+  <a href="https://understand-anything.com/demo/"><img src="https://img.shields.io/badge/Canlı_Demo-00c853" alt="Canlı Demo" /></a>
 </p>
 
 <p align="center">
@@ -53,7 +53,7 @@ Understand Anything, projenizi çok-ajan hattıyla analiz eden, her dosya, fonks
 ## ✨ Özellikler
 
 > [!NOTE]
-> **Hemen denemek ister misiniz?** [Ana sayfamızda](https://lum1104.github.io/Understand-Anything/) [canlı demoyu](https://lum1104.github.io/Understand-Anything/demo/) deneyin — doğrudan tarayıcınızda kaydırma, yakınlaştırma, arama ve keşfetme yapabileceğiniz tam etkileşimli bir kontrol paneli.
+> **Hemen denemek ister misiniz?** [Ana sayfamızda](https://understand-anything.com/) [canlı demoyu](https://understand-anything.com/demo/) deneyin — doğrudan tarayıcınızda kaydırma, yakınlaştırma, arama ve keşfetme yapabileceğiniz tam etkileşimli bir kontrol paneli.
 
 ### Yapısal grafiği keşfedin
 
