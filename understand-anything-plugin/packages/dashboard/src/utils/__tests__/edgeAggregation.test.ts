@@ -1,9 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { aggregateContainerEdges } from "../edgeAggregation";
-import type { GraphEdge } from "@understand-anything/core/types";
+import type { GraphEdge, EdgeType } from "@understand-anything/core/types";
 
-const ce = (source: string, target: string, type: string = "calls"): GraphEdge =>
-  ({ source, target, type }) as GraphEdge;
+const ce = (source: string, target: string, type: EdgeType = "calls"): GraphEdge => ({
+  source,
+  target,
+  type,
+});
 
 describe("aggregateContainerEdges", () => {
   it("returns empty arrays for empty input", () => {
@@ -36,7 +39,7 @@ describe("aggregateContainerEdges", () => {
     expect(agg.sourceContainerId).toBe("auth");
     expect(agg.targetContainerId).toBe("cart");
     expect(agg.count).toBe(3);
-    expect(agg.types.sort()).toEqual(["calls", "imports"]);
+    expect(agg.edgeTypes.sort()).toEqual(["calls", "imports"]);
   });
 
   it("treats opposite directions as separate aggregated edges", () => {
@@ -57,5 +60,18 @@ describe("aggregateContainerEdges", () => {
     const r = aggregateContainerEdges([ce("a", "z")], m);
     expect(r.intraContainer).toEqual([]);
     expect(r.interContainerAggregated).toEqual([]);
+  });
+
+  it("does not collide when container ids contain the separator character", () => {
+    // Pre-fix: key was `${sc} ${tc}` so `("x y", "z")` and `("x", "y z")`
+    // would both map to `"x y z"`. Length-prefix on source prevents this.
+    const m = new Map([
+      ["a", "x y"],
+      ["b", "z"],
+      ["c", "x"],
+      ["d", "y z"],
+    ]);
+    const r = aggregateContainerEdges([ce("a", "b"), ce("c", "d")], m);
+    expect(r.interContainerAggregated).toHaveLength(2);
   });
 });
