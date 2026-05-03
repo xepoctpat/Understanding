@@ -20,7 +20,7 @@ import type { LayerClusterFlowNode } from "./LayerClusterNode";
 import PortalNode from "./PortalNode";
 import type { PortalFlowNode } from "./PortalNode";
 import ContainerNode from "./ContainerNode";
-import type { ContainerFlowNode } from "./ContainerNode";
+import type { ContainerFlowNode, ContainerNodeData } from "./ContainerNode";
 import Breadcrumb from "./Breadcrumb";
 import { useDashboardStore } from "../store";
 import type {
@@ -825,6 +825,7 @@ function useLayerDetailGraph() {
   const diffMode = useDashboardStore((s) => s.diffMode);
   const changedNodeIds = useDashboardStore((s) => s.changedNodeIds);
   const affectedNodeIds = useDashboardStore((s) => s.affectedNodeIds);
+  const focusNodeId = useDashboardStore((s) => s.focusNodeId);
   const selectNode = useDashboardStore((s) => s.selectNode);
 
   const handleNodeSelect = useCallback(
@@ -875,9 +876,78 @@ function useLayerDetailGraph() {
     handleNodeSelect,
   ]);
 
+  // ── Container visual overlay flags (Task 14) ────────────────────────────
+  // O(searchResults) — bucket search hits by container atom.
+  const searchHitsByContainer = useMemo(() => {
+    const m = new Map<string, number>();
+    if (searchResults.length === 0) return m;
+    for (const r of searchResults) {
+      const cid = topo.nodeToContainer.get(r.nodeId);
+      // Only count when the file is actually inside a container (cid !== file id).
+      if (!cid || cid === r.nodeId) continue;
+      m.set(cid, (m.get(cid) ?? 0) + 1);
+    }
+    return m;
+  }, [searchResults, topo.nodeToContainer]);
+
+  // O(changed + affected) — set of container atoms touched by the diff.
+  const diffContainers = useMemo(() => {
+    const s = new Set<string>();
+    if (!diffMode) return s;
+    for (const id of changedNodeIds) {
+      const cid = topo.nodeToContainer.get(id);
+      if (cid && cid !== id) s.add(cid);
+    }
+    for (const id of affectedNodeIds) {
+      const cid = topo.nodeToContainer.get(id);
+      if (cid && cid !== id) s.add(cid);
+    }
+    return s;
+  }, [diffMode, changedNodeIds, affectedNodeIds, topo.nodeToContainer]);
+
+  // O(filteredEdges) — focus node's container + 1-hop neighbor containers.
+  const focusContainerIds = useMemo(() => {
+    const s = new Set<string>();
+    if (!focusNodeId) return s;
+    const focusCid = topo.nodeToContainer.get(focusNodeId);
+    if (focusCid && focusCid !== focusNodeId) s.add(focusCid);
+    for (const e of topo.filteredEdges) {
+      if (e.source === focusNodeId) {
+        const cid = topo.nodeToContainer.get(e.target);
+        if (cid && cid !== e.target) s.add(cid);
+      } else if (e.target === focusNodeId) {
+        const cid = topo.nodeToContainer.get(e.source);
+        if (cid && cid !== e.source) s.add(cid);
+      }
+    }
+    return s;
+  }, [focusNodeId, topo.filteredEdges, topo.nodeToContainer]);
+
+  // Selection neighbor highlighting for containers: when the selected node
+  // (or one of its neighbors) lives inside a container, that container atom
+  // should pop visually so the user can see where the relationship lives
+  // even when the container is collapsed. We piggyback on `isFocusedViaChild`
+  // since ContainerNode already styles that flag (gold border emphasis).
+  const selectionContainerIds = useMemo(() => {
+    const s = new Set<string>();
+    if (!selectedNodeId) return s;
+    const selCid = topo.nodeToContainer.get(selectedNodeId);
+    if (selCid && selCid !== selectedNodeId) s.add(selCid);
+    for (const e of topo.filteredEdges) {
+      if (e.source === selectedNodeId) {
+        const cid = topo.nodeToContainer.get(e.target);
+        if (cid && cid !== e.target) s.add(cid);
+      } else if (e.target === selectedNodeId) {
+        const cid = topo.nodeToContainer.get(e.source);
+        if (cid && cid !== e.source) s.add(cid);
+      }
+    }
+    return s;
+  }, [selectedNodeId, topo.filteredEdges, topo.nodeToContainer]);
+
   // Combine Stage 1 nodes with Stage 2 expanded children, then apply the
   // visual overlay (selection, search, tour) to every CustomFlowNode in
-  // the combined set.
+  // the combined set. Container nodes get their own overlay branch.
   const nodes = useMemo(() => {
     const combined: Node[] = [...topo.nodes, ...expandedChildNodes];
 
@@ -895,9 +965,44 @@ function useLayerDetailGraph() {
     }
 
     return combined.map((node) => {
-      // Skip portal + container nodes — they have no CustomNodeData.
-      // (Container visual overlays land in Task 14.)
-      if (node.type === "portal" || node.type === "container") return node;
+      // Portal nodes have no overlay state.
+      if (node.type === "portal") return node;
+
+      // Container nodes: apply container-specific visual flags.
+      if (node.type === "container") {
+        const cid = String(node.id);
+        const data = node.data as ContainerNodeData;
+        const isExpanded = expandedContainers.has(cid);
+        const rawHits = searchHitsByContainer.get(cid) ?? 0;
+        const hasSearchHits = rawHits > 0;
+        const searchHitCount = hasSearchHits ? rawHits : undefined;
+        const isDiffAffected = diffContainers.has(cid);
+        const isFocusedViaChild =
+          focusContainerIds.has(cid) || selectionContainerIds.has(cid);
+
+        // Skip creating a new object if nothing changed.
+        if (
+          data.isExpanded === isExpanded &&
+          data.hasSearchHits === hasSearchHits &&
+          data.searchHitCount === searchHitCount &&
+          data.isDiffAffected === isDiffAffected &&
+          data.isFocusedViaChild === isFocusedViaChild
+        ) {
+          return node;
+        }
+
+        return {
+          ...node,
+          data: {
+            ...data,
+            isExpanded,
+            hasSearchHits,
+            searchHitCount,
+            isDiffAffected,
+            isFocusedViaChild,
+          },
+        };
+      }
 
       const searchScore = searchMap.get(node.id);
       const isHighlighted = searchScore !== undefined;
@@ -923,7 +1028,19 @@ function useLayerDetailGraph() {
 
       return { ...node, data: { ...data, isHighlighted, searchScore, isSelected, isTourHighlighted, isNeighbor, isSelectionFaded } };
     });
-  }, [topo.nodes, expandedChildNodes, topo.filteredEdges, selectedNodeId, searchResults, tourHighlightedNodeIds]);
+  }, [
+    topo.nodes,
+    expandedChildNodes,
+    topo.filteredEdges,
+    selectedNodeId,
+    searchResults,
+    tourHighlightedNodeIds,
+    expandedContainers,
+    searchHitsByContainer,
+    diffContainers,
+    focusContainerIds,
+    selectionContainerIds,
+  ]);
 
   // Replace aggregated edges incident to an expanded container with the
   // underlying file→file edges from filteredEdges. Aggregated edges where
