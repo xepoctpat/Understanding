@@ -56,8 +56,12 @@ function groupByFolder(
   const lcp = commonPrefix(withPath.map((n) => n.filePath!));
   const groups = new Map<string, string[]>();
   const rooted: string[] = [];
-  for (const n of withPath) {
-    const stripped = n.filePath!.slice(lcp.length);
+  for (const n of nodes) {
+    if (!n.filePath) {
+      rooted.push(n.id);
+      continue;
+    }
+    const stripped = n.filePath.slice(lcp.length);
     if (!stripped.includes("/")) {
       rooted.push(n.id);
       continue;
@@ -66,9 +70,6 @@ function groupByFolder(
     const arr = groups.get(seg) ?? [];
     arr.push(n.id);
     groups.set(seg, arr);
-  }
-  for (const n of nodes) {
-    if (!n.filePath) rooted.push(n.id);
   }
   return { groups, rooted };
 }
@@ -114,7 +115,9 @@ export function deriveContainers(
     const sorted = [...byCommunity.entries()].sort((a, b) => a[0] - b[0]);
     containers = sorted.map(([cid, ids], i) => ({
       id: `container:cluster-${cid}`,
-      name: `Cluster ${String.fromCharCode(65 + i)}`,
+      // A-Z for the first 26, then numeric. Avoids `String.fromCharCode(65+i)`
+      // wrapping into `[`, `\`, `]` ... once the cluster count exceeds 26.
+      name: i < 26 ? `Cluster ${String.fromCharCode(65 + i)}` : `Cluster ${i + 1}`,
       nodeIds: ids,
       strategy: "community" as const,
     }));

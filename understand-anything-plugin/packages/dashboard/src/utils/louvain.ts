@@ -5,8 +5,14 @@ import type { GraphEdge } from "@understand-anything/core/types";
 /**
  * Run Louvain community detection over the provided node set and the
  * subset of edges whose endpoints are both in the set. Returns a map of
- * nodeId → communityId. Disconnected nodes get unique community ids so
- * they don't collapse into a single cluster.
+ * nodeId → communityId.
+ *
+ * graphology-communities-louvain v2 already gives each disconnected node
+ * its own community id, but the contract isn't documented. The
+ * post-Louvain reassignment loop below is defensive: if a future version
+ * starts returning -1 (or omits a node, which the `?? -1` catches) for
+ * unmatched nodes, we'll still hand back unique ids rather than letting
+ * them collapse into a single cluster.
  */
 export function detectCommunities(
   nodeIds: string[],
@@ -27,7 +33,9 @@ export function detectCommunities(
   for (const id of nodeIds) {
     map.set(id, result[id] ?? -1);
   }
-  // Reassign disconnected nodes (community -1) to unique ids past the max
+  // Defensive: reassign any -1 sentinels to unique ids past the max.
+  // See the JSDoc on detectCommunities for why this is kept despite the
+  // current library already producing unique ids for disconnected nodes.
   let next =
     Math.max(...Array.from(map.values()).filter((v) => v >= 0), -1) + 1;
   for (const [id, c] of map) {

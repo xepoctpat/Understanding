@@ -10,6 +10,7 @@ function node(id: string, filePath?: string): GraphNode {
     filePath,
     summary: "",
     complexity: "simple",
+    tags: [],
   } as GraphNode;
 }
 
@@ -113,13 +114,18 @@ describe("deriveContainers — community fallback", () => {
     }
   });
 
-  it("falls back when one folder holds > 60%", () => {
+  it("falls back when one folder holds > 70%", () => {
     const nodes = [
       ...Array.from({ length: 8 }, (_, i) => node(`big${i}`, `big/file${i}.go`)),
       node("a", "small1/a.go"),
       node("b", "small2/b.go"),
     ];
-    const { containers } = deriveContainers(nodes, []);
-    expect(containers.every((c) => c.strategy === "community")).toBe(true);
+    const { containers, ungrouped } = deriveContainers(nodes, []);
+    // Folder strategy would have produced a 'big' container with 8 children.
+    // Community fallback (no edges) gives each node its own community → all
+    // single-child → all suppressed. The non-vacuous evidence the fallback
+    // path was taken: NO folder-strategy 'big' container survives.
+    expect(containers.find((c) => c.strategy === "folder" && c.name === "big")).toBeUndefined();
+    expect(ungrouped.length).toBe(10);
   });
 });
