@@ -1,15 +1,21 @@
-import type { GraphNode, GraphEdge, Layer } from "@understand-anything/core/types";
+import type { GraphNode, GraphEdge } from "@understand-anything/core/types";
 import type { FilterState, NodeType, Complexity, EdgeCategory } from "../store";
 import { EDGE_CATEGORY_MAP } from "../store";
 
 /**
- * Filter nodes based on active filters
+ * Filter nodes based on active filters.
+ *
+ * Pass `nodeIdToLayerId` from the store (precomputed once on `setGraph`)
+ * so the layer-membership check is O(1) per node. The previous shape took
+ * `Layer[]` and ran `layer.nodeIds.includes(node.id)` per node-per-layer,
+ * which was O(N × L × K) and dominated export time on large graphs (#102).
  */
 export function filterNodes(
   nodes: GraphNode[],
-  layers: Layer[],
+  nodeIdToLayerId: Map<string, string>,
   filters: FilterState,
 ): GraphNode[] {
+  const hasLayerFilter = filters.layerIds.size > 0;
   return nodes.filter((node) => {
     // Filter by node type
     if (!filters.nodeTypes.has(node.type as NodeType)) {
@@ -22,11 +28,9 @@ export function filterNodes(
     }
 
     // Filter by layer (if any layers are selected)
-    if (filters.layerIds.size > 0) {
-      const nodeInSelectedLayer = layers.some(
-        (layer) => filters.layerIds.has(layer.id) && layer.nodeIds.includes(node.id)
-      );
-      if (!nodeInSelectedLayer) {
+    if (hasLayerFilter) {
+      const layerId = nodeIdToLayerId.get(node.id);
+      if (!layerId || !filters.layerIds.has(layerId)) {
         return false;
       }
     }
